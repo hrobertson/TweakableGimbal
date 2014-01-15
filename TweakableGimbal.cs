@@ -74,13 +74,13 @@ namespace TweakableGimbal
 			{
 				if (m_gimbal != null)
 				{
-					Debug.Log("Getting initRots.");
+					//Debug.Log("Getting initRots.");
 					FieldInfo fi = typeof(ModuleGimbal).GetField("initRots", BindingFlags.NonPublic | BindingFlags.Instance);
 					m_initRots = (List<Quaternion>)fi.GetValue(m_gimbal);
 				}
 				
 				this.InvokeRepeating("OnUpdate", 0.1f, 0.1f);
-				Debug.Log("TweakableGimbal: OnStart");
+				//Debug.Log("TweakableGimbal: OnStart");
 			}
 		}
 
@@ -99,7 +99,7 @@ namespace TweakableGimbal
 
 		public override void OnUpdate()
 		{
-			Debug.Log("TweakableGimbal: OnUpdate");
+			//Debug.Log("TweakableGimbal: OnUpdate");
 			if (m_startState != StartState.Editor) return;
 
 			float ctrlYaw = 0.0f;
@@ -123,25 +123,27 @@ namespace TweakableGimbal
 					m_gimbal.gimbalAngleV = Mathf.Clamp(pitchValue + rollValueV, -m_gimbal.gimbalRange, m_gimbal.gimbalRange);
 				}
 
-				Debug.Log("Try to rotate the nozzle");
+				//Debug.Log("Try to rotate the nozzle");
 
 				// Use the gimbal's OnFixedUpdate.
-				if(EditorLogic.startPod != null)
-				for (int i = 0; i < m_gimbal.gimbalTransforms.Count; ++i)
-				{
-					Quaternion q = m_initRots[i];
-					Transform transform = m_gimbal.gimbalTransforms[i];
+				if (EditorLogic.startPod != null)
+					for (int i = 0; i < m_gimbal.gimbalTransforms.Count; ++i)
+					{
+						Quaternion q = m_initRots[i];
+						Transform transform = m_gimbal.gimbalTransforms[i];
 
-					Vector3 axisH = transform.InverseTransformDirection(EditorLogic.startPod.transform.forward);
-					Vector3 axisV = transform.InverseTransformDirection(EditorLogic.startPod.transform.right);
+						Vector3 axisH = transform.InverseTransformDirection(EditorLogic.startPod.transform.forward);
+						Vector3 axisV = transform.InverseTransformDirection(EditorLogic.startPod.transform.right);
 
-					Quaternion qH = Quaternion.AngleAxis(m_gimbal.gimbalAngleH, axisH);
-					Quaternion qV = Quaternion.AngleAxis(m_gimbal.gimbalAngleV, axisV);
-					transform.localRotation = q * qV * qH;
-				}
+						Quaternion qH = Quaternion.AngleAxis(m_gimbal.gimbalAngleH, axisH);
+						Quaternion qV = Quaternion.AngleAxis(m_gimbal.gimbalAngleV, axisV);
+						transform.localRotation = q * qV * qH;
+					}
 			}
 			else
-				Debug.Log("Cannot find gimbal.");
+			{
+				//Debug.Log("Cannot find gimbal.");
+			}
 		}
 
 		public override void OnFixedUpdate()
