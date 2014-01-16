@@ -169,20 +169,20 @@ namespace TweakableGimbal
 			{
 				if (m_gimbal.gimbalLock == false)
 				{
-					float yawValueH = ctrlYaw * m_gimbal.gimbalRange * yawCoeffH * (yawReverseH ? -1.0f : 1.0f);
-					float yawValueV = ctrlYaw * m_gimbal.gimbalRange * yawCoeffV * (yawReverseV ? -1.0f : 1.0f);
-					float pitchValueH = ctrlPitch * m_gimbal.gimbalRange * pitchCoeffH * (pitchReverseH ? -1.0f : 1.0f);
-					float pitchValueV = ctrlPitch * m_gimbal.gimbalRange * pitchCoeffV * (pitchReverseV ? -1.0f : 1.0f);
-					float rollValueH = ctrlRoll * m_gimbal.gimbalRange * rollCoeffH * (rollReverseH ? -1.0f : 1.0f);
-					float rollValueV = ctrlRoll * m_gimbal.gimbalRange * rollCoeffV * (rollReverseV ? -1.0f : 1.0f);
+					float yawValueH = ctrlYaw * m_maxGimbalRange * yawCoeffH * (yawReverseH ? -1.0f : 1.0f);
+					float yawValueV = ctrlYaw * m_maxGimbalRange * yawCoeffV * (yawReverseV ? -1.0f : 1.0f);
+					float pitchValueH = ctrlPitch * m_maxGimbalRange * pitchCoeffH * (pitchReverseH ? -1.0f : 1.0f);
+					float pitchValueV = ctrlPitch * m_maxGimbalRange * pitchCoeffV * (pitchReverseV ? -1.0f : 1.0f);
+					float rollValueH = ctrlRoll * m_maxGimbalRange * rollCoeffH * (rollReverseH ? -1.0f : 1.0f);
+					float rollValueV = ctrlRoll * m_maxGimbalRange * rollCoeffV * (rollReverseV ? -1.0f : 1.0f);
 
-					Vector3 ctrlOutVecLocal = new Vector3(Mathf.Clamp(yawValueH + pitchValueH + rollValueH, -m_gimbal.gimbalRange, m_gimbal.gimbalRange), 0.0f, Mathf.Clamp(yawValueV + pitchValueV + rollValueV, -m_gimbal.gimbalRange, m_gimbal.gimbalRange));
+					Vector3 ctrlOutVecLocal = new Vector3(Mathf.Clamp(yawValueH + pitchValueH + rollValueH, -m_maxGimbalRange, m_maxGimbalRange), 0.0f, Mathf.Clamp(yawValueV + pitchValueV + rollValueV, -m_maxGimbalRange, m_maxGimbalRange));
 					Vector3 ctrlOutVecVessel = this.transform.TransformDirection(ctrlOutVecLocal);
 					Vector3 ctrlOutVecRef = EditorLogic.startPod.transform.InverseTransformDirection(ctrlOutVecVessel);
 					//Debug.Log("ctrlOutVecLocal: " + ctrlOutVecLocal.ToString() + "  ctrlOutVecVessel: " + ctrlOutVecVessel.ToString() + "  ctrlOutVecRef: " + ctrlOutVecRef.ToString());
 
-					m_gimbal.gimbalAngleH = Mathf.Clamp(ctrlOutVecRef.x, -m_gimbal.gimbalRange, m_gimbal.gimbalRange);
-					m_gimbal.gimbalAngleV = Mathf.Clamp(-ctrlOutVecRef.z, -m_gimbal.gimbalRange, m_gimbal.gimbalRange);
+					m_gimbal.gimbalAngleH = Mathf.Clamp(ctrlOutVecRef.x, -m_maxGimbalRange, m_maxGimbalRange);
+					m_gimbal.gimbalAngleV = Mathf.Clamp(-ctrlOutVecRef.z, -m_maxGimbalRange, m_maxGimbalRange);
 				}
 				//
 				//Debug.Log("Try to rotate the nozzle");
@@ -226,14 +226,14 @@ namespace TweakableGimbal
 			
 			if (m_gimbal.gimbalLock == false)
 			{
-				float yawValueH = ctrlYaw * m_gimbal.gimbalRange * yawCoeffH * (yawReverseH ? -1.0f : 1.0f);
-				float yawValueV = ctrlYaw * m_gimbal.gimbalRange * yawCoeffV * (yawReverseV ? -1.0f : 1.0f);
-				float pitchValueH = ctrlPitch * m_gimbal.gimbalRange * pitchCoeffH * (pitchReverseH ? -1.0f : 1.0f);
-				float pitchValueV = ctrlPitch * m_gimbal.gimbalRange * pitchCoeffV * (pitchReverseV ? -1.0f : 1.0f);
-				float rollValueH = ctrlRoll * m_gimbal.gimbalRange * rollCoeffH * (rollReverseH ? -1.0f : 1.0f);
-				float rollValueV = ctrlRoll * m_gimbal.gimbalRange * rollCoeffV * (rollReverseV ? -1.0f : 1.0f);
+				float yawValueH = ctrlYaw * m_maxGimbalRange * yawCoeffH * (yawReverseH ? -1.0f : 1.0f);
+				float yawValueV = ctrlYaw * m_maxGimbalRange * yawCoeffV * (yawReverseV ? -1.0f : 1.0f);
+				float pitchValueH = ctrlPitch * m_maxGimbalRange * pitchCoeffH * (pitchReverseH ? -1.0f : 1.0f);
+				float pitchValueV = ctrlPitch * m_maxGimbalRange * pitchCoeffV * (pitchReverseV ? -1.0f : 1.0f);
+				float rollValueH = ctrlRoll * m_maxGimbalRange * rollCoeffH * (rollReverseH ? -1.0f : 1.0f);
+				float rollValueV = ctrlRoll * m_maxGimbalRange * rollCoeffV * (rollReverseV ? -1.0f : 1.0f);
 
-				Vector3 ctrlOutVecLocal = new Vector3(Mathf.Clamp(yawValueH + pitchValueH + rollValueH, -m_gimbal.gimbalRange, m_gimbal.gimbalRange), 0.0f, Mathf.Clamp(yawValueV + pitchValueV + rollValueV, -m_gimbal.gimbalRange, m_gimbal.gimbalRange));
+				Vector3 ctrlOutVecLocal = new Vector3(Mathf.Clamp(yawValueH + pitchValueH + rollValueH, -m_maxGimbalRange, m_maxGimbalRange), 0.0f, Mathf.Clamp(yawValueV + pitchValueV + rollValueV, -m_maxGimbalRange, m_maxGimbalRange));
 				Vector3 ctrlOutVecVessel = this.transform.TransformDirection(ctrlOutVecLocal);
 				Vector3 ctrlOutVecRef = EditorLogic.startPod.transform.InverseTransformDirection(ctrlOutVecVessel);
 				
@@ -241,15 +241,15 @@ namespace TweakableGimbal
 				{
 					float deltaTime = TimeWarp.deltaTime;
 
-					float newGimbalH = Mathf.Lerp(m_gimbal.gimbalAngleH, Mathf.Clamp(ctrlOutVecRef.x, -m_gimbal.gimbalRange, m_gimbal.gimbalRange), m_gimbalResponseSpeed * deltaTime);
+					float newGimbalH = Mathf.Lerp(m_gimbal.gimbalAngleH, Mathf.Clamp(ctrlOutVecRef.x, -m_maxGimbalRange, m_maxGimbalRange), m_gimbalResponseSpeed * deltaTime);
 					m_gimbal.gimbalAngleH = newGimbalH;
-					float newGimbalV = Mathf.Lerp(m_gimbal.gimbalAngleV, Mathf.Clamp(-ctrlOutVecRef.z, -m_gimbal.gimbalRange, m_gimbal.gimbalRange), m_gimbalResponseSpeed * deltaTime);
+					float newGimbalV = Mathf.Lerp(m_gimbal.gimbalAngleV, Mathf.Clamp(-ctrlOutVecRef.z, -m_maxGimbalRange, m_maxGimbalRange), m_gimbalResponseSpeed * deltaTime);
 					m_gimbal.gimbalAngleV = newGimbalV;
 				}
 				else
 				{
-					m_gimbal.gimbalAngleH = Mathf.Clamp(ctrlOutVecRef.x, -m_gimbal.gimbalRange, m_gimbal.gimbalRange);
-					m_gimbal.gimbalAngleV = Mathf.Clamp(-ctrlOutVecRef.z, -m_gimbal.gimbalRange, m_gimbal.gimbalRange);
+					m_gimbal.gimbalAngleH = Mathf.Clamp(ctrlOutVecRef.x, -m_maxGimbalRange, m_maxGimbalRange);
+					m_gimbal.gimbalAngleV = Mathf.Clamp(-ctrlOutVecRef.z, -m_maxGimbalRange, m_maxGimbalRange);
 				}
 			}
 		}
