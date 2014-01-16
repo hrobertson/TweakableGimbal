@@ -32,21 +32,37 @@ namespace TweakableGimbal
 
 		// Tweakable.
 
-		[KSPField(isPersistant = true, guiActive = false, guiActiveEditor = true, guiName = "Yaw Reverse"),
+		[KSPField(isPersistant = true, guiActive = false, guiActiveEditor = true, guiName = "Yaw Reverse H"),
 		UI_Toggle(scene = UI_Scene.Editor)]
-		public bool yawReverse = false;
+		public bool yawReverseH = false;
 
-		[KSPField(isPersistant = true, guiActive = false, guiActiveEditor = true, guiName = "Yaw Coeff"),
+		[KSPField(isPersistant = true, guiActive = false, guiActiveEditor = true, guiName = "Yaw Coeff H"),
 		UI_FloatRange(minValue = 0.0f, maxValue = 1.0f, scene = UI_Scene.Editor, stepIncrement = 0.1f)]
-		public float yawCoeff = 1.0f;
-
-		[KSPField(isPersistant = true, guiActive = false, guiActiveEditor = true, guiName = "Pitch Reverse"),
+		public float yawCoeffH = 1.0f;
+		
+		[KSPField(isPersistant = true, guiActive = false, guiActiveEditor = true, guiName = "Yaw Reverse V"),
 		UI_Toggle(scene = UI_Scene.Editor)]
-		public bool pitchReverse = false;
+		public bool yawReverseV = false;
 
-		[KSPField(isPersistant = true, guiActive = false, guiActiveEditor = true, guiName = "Pitch Coeff"),
+		[KSPField(isPersistant = true, guiActive = false, guiActiveEditor = true, guiName = "Yaw Coeff V"),
 		UI_FloatRange(minValue = 0.0f, maxValue = 1.0f, scene = UI_Scene.Editor, stepIncrement = 0.1f)]
-		public float pitchCoeff = 1.0f;
+		public float yawCoeffV = 0.0f;
+		
+		[KSPField(isPersistant = true, guiActive = false, guiActiveEditor = true, guiName = "Pitch Reverse H"),
+		UI_Toggle(scene = UI_Scene.Editor)]
+		public bool pitchReverseH = false;
+
+		[KSPField(isPersistant = true, guiActive = false, guiActiveEditor = true, guiName = "Pitch Coeff H"),
+		UI_FloatRange(minValue = 0.0f, maxValue = 1.0f, scene = UI_Scene.Editor, stepIncrement = 0.1f)]
+		public float pitchCoeffH = 0.0f;
+		
+		[KSPField(isPersistant = true, guiActive = false, guiActiveEditor = true, guiName = "Pitch Reverse V"),
+		UI_Toggle(scene = UI_Scene.Editor)]
+		public bool pitchReverseV = false;
+
+		[KSPField(isPersistant = true, guiActive = false, guiActiveEditor = true, guiName = "Pitch Coeff V"),
+		UI_FloatRange(minValue = 0.0f, maxValue = 1.0f, scene = UI_Scene.Editor, stepIncrement = 0.1f)]
+		public float pitchCoeffV = 1.0f;
 
 		[KSPField(isPersistant = true, guiActive = false, guiActiveEditor = true, guiName = "Roll Reverse H"),
 		UI_Toggle(scene = UI_Scene.Editor)]
@@ -114,13 +130,13 @@ namespace TweakableGimbal
 			{
 				if (m_gimbal.gimbalLock == false)
 				{
-					float yawValue = ctrlYaw * m_gimbal.gimbalRange * yawCoeff * (yawReverse ? -1.0f : 1.0f);
-					float pitchValue = ctrlPitch * m_gimbal.gimbalRange * pitchCoeff * (pitchReverse ? -1.0f : 1.0f);
+					float yawValueH = ctrlYaw * m_gimbal.gimbalRange * yawCoeffH * (yawReverseH ? -1.0f : 1.0f);
+					float pitchValueV = ctrlPitch * m_gimbal.gimbalRange * pitchCoeffV * (pitchReverseV ? -1.0f : 1.0f);
 					float rollValueH = ctrlRoll * m_gimbal.gimbalRange * rollCoeffH * (rollReverseH ? -1.0f : 1.0f);
 					float rollValueV = ctrlRoll * m_gimbal.gimbalRange * rollCoeffV * (rollReverseV ? -1.0f : 1.0f);
 
-					m_gimbal.gimbalAngleH = Mathf.Clamp(yawValue + rollValueH, -m_gimbal.gimbalRange, m_gimbal.gimbalRange);
-					m_gimbal.gimbalAngleV = Mathf.Clamp(pitchValue + rollValueV, -m_gimbal.gimbalRange, m_gimbal.gimbalRange);
+					m_gimbal.gimbalAngleH = Mathf.Clamp(yawValueH + rollValueH, -m_gimbal.gimbalRange, m_gimbal.gimbalRange);
+					m_gimbal.gimbalAngleV = Mathf.Clamp(pitchValueV + rollValueV, -m_gimbal.gimbalRange, m_gimbal.gimbalRange);
 				}
 
 				//Debug.Log("Try to rotate the nozzle");
@@ -160,8 +176,8 @@ namespace TweakableGimbal
 			
 			if (m_gimbal.gimbalLock == false)
 			{
-				float yawValue = ctrlYaw * m_gimbal.gimbalRange * yawCoeff * (yawReverse ? -1.0f : 1.0f);
-				float pitchValue = ctrlPitch * m_gimbal.gimbalRange * pitchCoeff * (pitchReverse ? -1.0f : 1.0f);
+				float yawValueH = ctrlYaw * m_gimbal.gimbalRange * yawCoeffH * (yawReverseH ? -1.0f : 1.0f);
+				float pitchValueV = ctrlPitch * m_gimbal.gimbalRange * pitchCoeffV * (pitchReverseV ? -1.0f : 1.0f);
 				float rollValueH = ctrlRoll * m_gimbal.gimbalRange * rollCoeffH * (rollReverseH ? -1.0f : 1.0f);
 				float rollValueV = ctrlRoll * m_gimbal.gimbalRange * rollCoeffV * (rollReverseV ? -1.0f : 1.0f);
 				if (m_useGimbalResponseSpeed)
@@ -175,8 +191,8 @@ namespace TweakableGimbal
 				}
 				else
 				{
-					m_gimbal.gimbalAngleH = Mathf.Clamp(yawValue + rollValueH, -m_gimbal.gimbalRange, m_gimbal.gimbalRange);
-					m_gimbal.gimbalAngleV = Mathf.Clamp(pitchValue + rollValueV, -m_gimbal.gimbalRange, m_gimbal.gimbalRange);
+					m_gimbal.gimbalAngleH = Mathf.Clamp(yawValueH + rollValueH, -m_gimbal.gimbalRange, m_gimbal.gimbalRange);
+					m_gimbal.gimbalAngleV = Mathf.Clamp(pitchValueV + rollValueV, -m_gimbal.gimbalRange, m_gimbal.gimbalRange);
 				}
 			}
 		}
