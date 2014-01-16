@@ -29,7 +29,6 @@ namespace TweakableGimbal
 		UI_FloatRange(minValue = -1.0f, maxValue = 1.0f, scene = UI_Scene.Editor, stepIncrement = 0.1f)]
 		public float rollTest = 0.0f;
 
-
 		// Tweakable.
 
 		[KSPField(isPersistant = true, guiActive = false, guiActiveEditor = true, guiName = "Yaw Reverse H"),
@@ -80,6 +79,11 @@ namespace TweakableGimbal
 		UI_FloatRange(minValue = 0.0f, maxValue = 1.0f, scene = UI_Scene.Editor, stepIncrement = 0.1f)]
 		public float rollCoeffV = 0.0f;
 
+		[KSPField(isPersistant = true, guiActive = true, guiActiveEditor = true, guiName = "Max Angle"),
+		UI_FloatRange(minValue = 0.0f, maxValue = 1.0f, scene = UI_Scene.All, stepIncrement = 0.1f)]
+		public float m_maxGimbalRange = 1.0f;
+
+
 		public override void OnStart(PartModule.StartState state)
 		{
 			m_startState = state;
@@ -116,6 +120,8 @@ namespace TweakableGimbal
 		public override void OnUpdate()
 		{
 			//Debug.Log("TweakableGimbal: OnUpdate");
+			((Fields["m_maxGimbalRange"].uiControlEditor) as UI_FloatRange).maxValue = m_gimbal.gimbalRange;
+
 			if (m_startState != StartState.Editor) return;
 
 			float ctrlYaw = 0.0f;
