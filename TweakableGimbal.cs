@@ -31,48 +31,48 @@ namespace TweakableGimbal
 
 		// Tweakable.
 
-		[KSPField(isPersistant = true, guiActive = false, guiActiveEditor = true, guiName = "Yaw Reverse H"),
-		UI_Toggle(scene = UI_Scene.Editor)]
+		[KSPField(isPersistant = true, guiActive = true, guiActiveEditor = true, guiName = "Yaw Reverse H"),
+		UI_Toggle(scene = UI_Scene.All, enabledText = "On", disabledText = "Off")]
 		public bool yawReverseH = false;
 
 		[KSPField(isPersistant = true, guiActive = false, guiActiveEditor = true, guiName = "Yaw Coeff H"),
 		UI_FloatRange(minValue = 0.0f, maxValue = 1.0f, scene = UI_Scene.Editor, stepIncrement = 0.1f)]
 		public float yawCoeffH = 1.0f;
 		
-		[KSPField(isPersistant = true, guiActive = false, guiActiveEditor = true, guiName = "Yaw Reverse V"),
-		UI_Toggle(scene = UI_Scene.Editor)]
+		[KSPField(isPersistant = true, guiActive = true, guiActiveEditor = true, guiName = "Yaw Reverse V"),
+		UI_Toggle(scene = UI_Scene.All, enabledText = "On", disabledText = "Off")]
 		public bool yawReverseV = false;
 
 		[KSPField(isPersistant = true, guiActive = false, guiActiveEditor = true, guiName = "Yaw Coeff V"),
 		UI_FloatRange(minValue = 0.0f, maxValue = 1.0f, scene = UI_Scene.Editor, stepIncrement = 0.1f)]
 		public float yawCoeffV = 0.0f;
 		
-		[KSPField(isPersistant = true, guiActive = false, guiActiveEditor = true, guiName = "Pitch Reverse H"),
-		UI_Toggle(scene = UI_Scene.Editor)]
+		[KSPField(isPersistant = true, guiActive = true, guiActiveEditor = true, guiName = "Pitch Reverse H"),
+		UI_Toggle(scene = UI_Scene.All, enabledText = "On", disabledText = "Off")]
 		public bool pitchReverseH = false;
 
 		[KSPField(isPersistant = true, guiActive = false, guiActiveEditor = true, guiName = "Pitch Coeff H"),
 		UI_FloatRange(minValue = 0.0f, maxValue = 1.0f, scene = UI_Scene.Editor, stepIncrement = 0.1f)]
 		public float pitchCoeffH = 0.0f;
 		
-		[KSPField(isPersistant = true, guiActive = false, guiActiveEditor = true, guiName = "Pitch Reverse V"),
-		UI_Toggle(scene = UI_Scene.Editor)]
+		[KSPField(isPersistant = true, guiActive = true, guiActiveEditor = true, guiName = "Pitch Reverse V"),
+		UI_Toggle(scene = UI_Scene.All, enabledText = "On", disabledText = "Off")]
 		public bool pitchReverseV = false;
 
 		[KSPField(isPersistant = true, guiActive = false, guiActiveEditor = true, guiName = "Pitch Coeff V"),
 		UI_FloatRange(minValue = 0.0f, maxValue = 1.0f, scene = UI_Scene.Editor, stepIncrement = 0.1f)]
 		public float pitchCoeffV = 1.0f;
 
-		[KSPField(isPersistant = true, guiActive = false, guiActiveEditor = true, guiName = "Roll Reverse H"),
-		UI_Toggle(scene = UI_Scene.Editor)]
+		[KSPField(isPersistant = true, guiActive = true, guiActiveEditor = true, guiName = "Roll Reverse H"),
+		UI_Toggle(scene = UI_Scene.All, enabledText = "On", disabledText = "Off")]
 		public bool rollReverseH = false;
 
 		[KSPField(isPersistant = true, guiActive = false, guiActiveEditor = true, guiName = "Roll Coeff H"),
 		UI_FloatRange(minValue = 0.0f, maxValue = 1.0f, scene = UI_Scene.Editor, stepIncrement = 0.1f)]
 		public float rollCoeffH = 0.0f;
 
-		[KSPField(isPersistant = true, guiActive = false, guiActiveEditor = true, guiName = "Roll Reverse V"),
-		UI_Toggle(scene = UI_Scene.Editor)]
+		[KSPField(isPersistant = true, guiActive = true, guiActiveEditor = true, guiName = "Roll Reverse V"),
+		UI_Toggle(scene = UI_Scene.All, enabledText = "On", disabledText = "Off")]
 		public bool rollReverseV = false;
 
 		[KSPField(isPersistant = true, guiActive = false, guiActiveEditor = true, guiName = "Roll Coeff V"),
@@ -119,32 +119,72 @@ namespace TweakableGimbal
 
 		public override void OnUpdate()
 		{
-			//Debug.Log("TweakableGimbal: OnUpdate");
 			((Fields["m_maxGimbalRange"].uiControlEditor) as UI_FloatRange).maxValue = m_gimbal.gimbalRange;
-
-			if (m_startState != StartState.Editor) return;
+			((Fields["m_maxGimbalRange"].uiControlFlight) as UI_FloatRange).maxValue = m_gimbal.gimbalRange;
+			
+			//Debug.Log("TweakableGimbal: OnUpdate");
+			if (m_startState != StartState.Editor)
+			{
+				if (yawCoeffH == 0.0)
+					Fields["yawReverseH"].guiActive = false;
+				else
+					Fields["yawReverseH"].guiActive = true;
+				if (yawCoeffV == 0.0)
+					Fields["yawReverseV"].guiActive = false;
+				else
+					Fields["yawReverseV"].guiActive = true;
+				if (pitchCoeffH == 0.0)
+					Fields["pitchReverseH"].guiActive = false;
+				else
+					Fields["pitchReverseH"].guiActive = true;
+				if (pitchCoeffV == 0.0)
+					Fields["pitchReverseV"].guiActive = false;
+				else
+					Fields["pitchReverseV"].guiActive = true;
+				if (rollCoeffH == 0.0)
+					Fields["rollReverseH"].guiActive = false;
+				else
+					Fields["rollReverseH"].guiActive = true;
+				if (rollCoeffV == 0.0)
+					Fields["rollReverseV"].guiActive = false;
+				else
+					Fields["rollReverseV"].guiActive = true;
+				return;
+			}
 
 			float ctrlYaw = 0.0f;
 			float ctrlPitch = 0.0f;
 			float ctrlRoll = 0.0f;
-			
-			ctrlYaw = yawTest;
-			ctrlPitch = pitchTest;
-			ctrlRoll = rollTest;
+
+			Vector3 vesselRefVec = new Vector3(yawTest, 0.0f, -pitchTest);
+			Vector3 ctrlVecVessel = EditorLogic.startPod.transform.TransformDirection(vesselRefVec);
+			Vector3 ctrlVecLocal = this.transform.InverseTransformDirection(ctrlVecVessel);
+			//Debug.Log("ctrlVecVessel: " + ctrlVecVessel.ToString() + "  ctrlVecLocal: " + ctrlVecLocal.ToString());
+
+			ctrlYaw = ctrlVecLocal.x;
+			ctrlPitch = ctrlVecLocal.z;
+			ctrlRoll = -rollTest;
 
 			if (m_gimbal != null)
 			{
 				if (m_gimbal.gimbalLock == false)
 				{
 					float yawValueH = ctrlYaw * m_gimbal.gimbalRange * yawCoeffH * (yawReverseH ? -1.0f : 1.0f);
+					float yawValueV = ctrlYaw * m_gimbal.gimbalRange * yawCoeffV * (yawReverseV ? -1.0f : 1.0f);
+					float pitchValueH = ctrlPitch * m_gimbal.gimbalRange * pitchCoeffH * (pitchReverseH ? -1.0f : 1.0f);
 					float pitchValueV = ctrlPitch * m_gimbal.gimbalRange * pitchCoeffV * (pitchReverseV ? -1.0f : 1.0f);
 					float rollValueH = ctrlRoll * m_gimbal.gimbalRange * rollCoeffH * (rollReverseH ? -1.0f : 1.0f);
 					float rollValueV = ctrlRoll * m_gimbal.gimbalRange * rollCoeffV * (rollReverseV ? -1.0f : 1.0f);
 
-					m_gimbal.gimbalAngleH = Mathf.Clamp(yawValueH + rollValueH, -m_gimbal.gimbalRange, m_gimbal.gimbalRange);
-					m_gimbal.gimbalAngleV = Mathf.Clamp(pitchValueV + rollValueV, -m_gimbal.gimbalRange, m_gimbal.gimbalRange);
-				}
+					Vector3 ctrlOutVecLocal = new Vector3(Mathf.Clamp(yawValueH + pitchValueH + rollValueH, -m_gimbal.gimbalRange, m_gimbal.gimbalRange), 0.0f, Mathf.Clamp(yawValueV + pitchValueV + rollValueV, -m_gimbal.gimbalRange, m_gimbal.gimbalRange));
+					Vector3 ctrlOutVecVessel = this.transform.TransformDirection(ctrlOutVecLocal);
+					Vector3 ctrlOutVecRef = EditorLogic.startPod.transform.InverseTransformDirection(ctrlOutVecVessel);
+					//Debug.Log("ctrlOutVecLocal: " + ctrlOutVecLocal.ToString() + "  ctrlOutVecVessel: " + ctrlOutVecVessel.ToString() + "  ctrlOutVecRef: " + ctrlOutVecRef.ToString());
 
+					m_gimbal.gimbalAngleH = Mathf.Clamp(ctrlOutVecRef.x, -m_gimbal.gimbalRange, m_gimbal.gimbalRange);
+					m_gimbal.gimbalAngleV = Mathf.Clamp(-ctrlOutVecRef.z, -m_gimbal.gimbalRange, m_gimbal.gimbalRange);
+				}
+				//
 				//Debug.Log("Try to rotate the nozzle");
 
 				// Use the gimbal's OnFixedUpdate.
@@ -156,7 +196,7 @@ namespace TweakableGimbal
 
 						Vector3 axisH = transform.InverseTransformDirection(EditorLogic.startPod.transform.forward);
 						Vector3 axisV = transform.InverseTransformDirection(EditorLogic.startPod.transform.right);
-
+						
 						Quaternion qH = Quaternion.AngleAxis(m_gimbal.gimbalAngleH, axisH);
 						Quaternion qV = Quaternion.AngleAxis(m_gimbal.gimbalAngleV, axisV);
 						transform.localRotation = q * qV * qH;
@@ -171,34 +211,45 @@ namespace TweakableGimbal
 		public override void OnFixedUpdate()
 		{
 			if (m_startState == StartState.Editor) return;
-				
+
 			float ctrlYaw = 0.0f;
 			float ctrlPitch = 0.0f;
 			float ctrlRoll = 0.0f;
+
+			Vector3 vesselRefVec = new Vector3(vessel.ctrlState.yaw, 0.0f, -vessel.ctrlState.pitch);
+			Vector3 ctrlVecVessel = vessel.ReferenceTransform.TransformDirection(vesselRefVec);
+			Vector3 ctrlVecLocal = this.transform.InverseTransformDirection(ctrlVecVessel);
 			
-			ctrlYaw = vessel.ctrlState.yaw;
-			ctrlPitch = vessel.ctrlState.pitch;
-			ctrlRoll = vessel.ctrlState.roll;
+			ctrlYaw = ctrlVecLocal.x;
+			ctrlPitch = ctrlVecLocal.z;
+			ctrlRoll = -vessel.ctrlState.roll; 
 			
 			if (m_gimbal.gimbalLock == false)
 			{
 				float yawValueH = ctrlYaw * m_gimbal.gimbalRange * yawCoeffH * (yawReverseH ? -1.0f : 1.0f);
+				float yawValueV = ctrlYaw * m_gimbal.gimbalRange * yawCoeffV * (yawReverseV ? -1.0f : 1.0f);
+				float pitchValueH = ctrlPitch * m_gimbal.gimbalRange * pitchCoeffH * (pitchReverseH ? -1.0f : 1.0f);
 				float pitchValueV = ctrlPitch * m_gimbal.gimbalRange * pitchCoeffV * (pitchReverseV ? -1.0f : 1.0f);
 				float rollValueH = ctrlRoll * m_gimbal.gimbalRange * rollCoeffH * (rollReverseH ? -1.0f : 1.0f);
 				float rollValueV = ctrlRoll * m_gimbal.gimbalRange * rollCoeffV * (rollReverseV ? -1.0f : 1.0f);
+
+				Vector3 ctrlOutVecLocal = new Vector3(Mathf.Clamp(yawValueH + pitchValueH + rollValueH, -m_gimbal.gimbalRange, m_gimbal.gimbalRange), 0.0f, Mathf.Clamp(yawValueV + pitchValueV + rollValueV, -m_gimbal.gimbalRange, m_gimbal.gimbalRange));
+				Vector3 ctrlOutVecVessel = this.transform.TransformDirection(ctrlOutVecLocal);
+				Vector3 ctrlOutVecRef = EditorLogic.startPod.transform.InverseTransformDirection(ctrlOutVecVessel);
+				
 				if (m_useGimbalResponseSpeed)
 				{
 					float deltaTime = TimeWarp.deltaTime;
 
-					float newGimbalH = Mathf.Lerp(m_gimbal.gimbalAngleH, Mathf.Clamp(yawValue + rollValueH, -m_gimbal.gimbalRange, m_gimbal.gimbalRange), m_gimbalResponseSpeed * deltaTime);
+					float newGimbalH = Mathf.Lerp(m_gimbal.gimbalAngleH, Mathf.Clamp(ctrlOutVecRef.x, -m_gimbal.gimbalRange, m_gimbal.gimbalRange), m_gimbalResponseSpeed * deltaTime);
 					m_gimbal.gimbalAngleH = newGimbalH;
-					float newGimbalV = Mathf.Lerp(m_gimbal.gimbalAngleV, Mathf.Clamp(pitchValue + rollValueV, -m_gimbal.gimbalRange, m_gimbal.gimbalRange), m_gimbalResponseSpeed * deltaTime);
+					float newGimbalV = Mathf.Lerp(m_gimbal.gimbalAngleV, Mathf.Clamp(-ctrlOutVecRef.z, -m_gimbal.gimbalRange, m_gimbal.gimbalRange), m_gimbalResponseSpeed * deltaTime);
 					m_gimbal.gimbalAngleV = newGimbalV;
 				}
 				else
 				{
-					m_gimbal.gimbalAngleH = Mathf.Clamp(yawValueH + rollValueH, -m_gimbal.gimbalRange, m_gimbal.gimbalRange);
-					m_gimbal.gimbalAngleV = Mathf.Clamp(pitchValueV + rollValueV, -m_gimbal.gimbalRange, m_gimbal.gimbalRange);
+					m_gimbal.gimbalAngleH = Mathf.Clamp(ctrlOutVecRef.x, -m_gimbal.gimbalRange, m_gimbal.gimbalRange);
+					m_gimbal.gimbalAngleV = Mathf.Clamp(-ctrlOutVecRef.z, -m_gimbal.gimbalRange, m_gimbal.gimbalRange);
 				}
 			}
 		}
