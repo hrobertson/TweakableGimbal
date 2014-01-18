@@ -80,7 +80,7 @@ namespace TweakableGimbal
 		public float rollCoeffV = 0.0f;
 
 		[KSPField(isPersistant = true, guiActive = true, guiActiveEditor = true, guiName = "Max Angle"),
-		UI_FloatRange(minValue = 0.0f, maxValue = 1.0f, scene = UI_Scene.All, stepIncrement = 0.1f)]
+		UI_FloatRange(minValue = 0.0f, maxValue = 1.0f, scene = UI_Scene.All, stepIncrement = 0.05f)]
 		public float m_maxGimbalRange = 1.0f;
 
 
@@ -235,7 +235,7 @@ namespace TweakableGimbal
 
 				Vector3 ctrlOutVecLocal = new Vector3(Mathf.Clamp(yawValueH + pitchValueH + rollValueH, -m_maxGimbalRange, m_maxGimbalRange), 0.0f, Mathf.Clamp(yawValueV + pitchValueV + rollValueV, -m_maxGimbalRange, m_maxGimbalRange));
 				Vector3 ctrlOutVecVessel = this.transform.TransformDirection(ctrlOutVecLocal);
-				Vector3 ctrlOutVecRef = EditorLogic.startPod.transform.InverseTransformDirection(ctrlOutVecVessel);
+				Vector3 ctrlOutVecRef = vessel.ReferenceTransform.InverseTransformDirection(ctrlOutVecVessel);
 				
 				if (m_useGimbalResponseSpeed)
 				{
